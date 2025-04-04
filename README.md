@@ -41,14 +41,14 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
 *   **Filter:** Hydrogen-alpha (Hα) - _This traces ionized hydrogen gas, highlighting specific structures within the nebula._
 *   **Source:** Las Cumbres Observatory (LCO) Global Telescope Network
 *   **Observation:** Taken by Roly Warry on Wed Jun 12 2024, using the 0.4-meter telescope at Siding Spring Observatory, Australia.
-*   **File:** (Let's assume a filename like `lco_helix_nebula_ha_0m4_sso_20240612.fits.fz`)
+*   **File:** (Let's assume a filename like `coj0m421-sq37-20240612-0129-e91.fits.fz`)
 
 **2.  Generate STL using recommended options:**
     ```bash
      python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz output_model.stl --hdu 1 --log_scale --clip 1 --max_height 50 --smooth 2.0 --downsample 2
     ```
 **3.  Preview STL in Slicer:**
-
+![Preview of the 3D model of the Helix nebula generated with AstroTouch](output_model.jpg)
 **4.  3D Print the Model:**
 
 
