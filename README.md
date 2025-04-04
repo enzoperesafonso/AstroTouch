@@ -31,6 +31,16 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 
 **Example Workflow:**
 
+Here's a workflow example using an observation of the Helix Nebula in Hydrogen-alpha:
+
+**1. Input FITS Image:**
+
+*   **Object:** Helix Nebula (NGC 7293)
+*   **Filter:** Hydrogen-alpha (Hα) - _This traces ionized hydrogen gas, highlighting specific structures within the nebula._
+*   **Source:** Las Cumbres Observatory (LCO) Global Telescope Network
+*   **Observation:** Taken by Roly Warry on Wed Jun 12 2024, using the 0.4-meter telescope at Siding Spring Observatory, Australia.
+*   **File:** (Let's assume a filename like `lco_helix_nebula_ha_0m4_sso_20240612.fits.fz`)
+
 1.  Input FITS Image (e.g., a galaxy)
     ```
     [Insert Screenshot of Original FITS Galaxy Image Here]
