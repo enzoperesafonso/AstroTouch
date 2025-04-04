@@ -25,15 +25,13 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 *   Handles `NaN`/`inf` values in FITS data by replacing them with a sensible default (usually the post-clipping minimum).
 *   Outputs standard STL files compatible with 3D printing slicers (like Cura, PrusaSlicer, etc.).
 
-## Examples
-
-*(Consider adding screenshots/photos here!)*
-
-**Example Workflow:**
+## Example Workflow:
 
 Here's a workflow example using an observation of the Helix Nebula in Hydrogen-alpha:
 
+
 ![View of the H-alpha emission from the Helix Nebula in FITS viewer](lco_h_alpha_preview.jpg)
+
 
 
 **1. Input FITS Image:**
@@ -51,6 +49,7 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
    ```
     
 **3.  Preview STL in Slicer:**
+
 ![Preview of the 3D model of the Helix nebula generated with AstroTouch](output_model.jpg)
 
 
