@@ -139,10 +139,6 @@ See `python fits_to_stl.py --help` for a full list and defaults. Key options inc
 
 *   Common issues include needing `--hdu 1`, adjusting `--smooth` for printability, using a brim for bed adhesion, and using `--downsample` for large files.
 
-## Contributing
-
-Contributions are welcome! Please use the GitHub Issue tracker for bugs and feature requests. For code contributions, please fork the repository and submit a Pull Request. See `CONTRIBUTING.md` for more details (if you create one).
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
