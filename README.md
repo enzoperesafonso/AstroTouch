@@ -37,7 +37,7 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
     ```
 2.  Generate STL using recommended options:
     ```bash
-    python fits_to_stl.py galaxy.fits galaxy_model.stl --hdu 1 --log_scale --smooth 1.5 --clip 1.0 --max_height 12.0
+     python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz output_model.stl --hdu 1 --log_scale --clip 1 --max_height 50 --smooth 2.0 --downsample 2
     ```
 3.  Preview STL in Slicer:
     ```
