@@ -87,6 +87,7 @@ Run the script from your terminal (make sure your virtual environment is active)
 
 ```bash
 python fits_to_stl.py <input_fits_file> <output_stl_file> [options]
+```
 
 ### Required Arguments
 
