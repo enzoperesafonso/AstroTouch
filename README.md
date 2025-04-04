@@ -60,10 +60,9 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/[your-username]/[your-repo-name].git
-    cd [your-repo-name]
+    git clone https://github.com/enzoperesafonso/AstroTouch.git
+    cd AstroTouch
     ```
-    *(Replace `[your-username]/[your-repo-name]` with your actual GitHub username and repository name)*
 
 2.  **Create a virtual environment (Recommended):**
     ```bash
