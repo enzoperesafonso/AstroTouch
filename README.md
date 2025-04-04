@@ -33,7 +33,7 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 
 Here's a workflow example using an observation of the Helix Nebula in Hydrogen-alpha:
 
-![View of the H-alpha emission from the Helix Nebula in FITS viewer](images/helix_fits_view.png)
+![View of the H-alpha emission from the Helix Nebula in FITS viewer](lco_h_alpha_preview.jpg)
 
 **1. Input FITS Image:**
 
