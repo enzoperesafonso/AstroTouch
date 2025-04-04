@@ -87,3 +87,59 @@ Run the script from your terminal (make sure your virtual environment is active)
 
 ```bash
 python fits_to_stl.py <input_fits_file> <output_stl_file> [options]
+
+### Required Arguments
+
+*   `<input_fits_file>`: Path to the input FITS file (e.g., `image.fits` or `image.fits.fz`).
+*   `<output_stl_file>`: Path where the output STL file will be saved (e.g., `model.stl`).
+
+### Optional Arguments
+
+See `python fits_to_stl.py --help` for a full list and defaults. Key options include:
+
+*   `--hdu INDEX` (Default: `0`, often need `1`)
+*   `--max_height MM` (Default: `10.0`)
+*   `--base_thickness MM` (Default: `2.0`)
+*   `--invert`
+*   `--log_scale`
+*   `--clip PERCENT` (Default: `1.0`)
+*   `--smooth SIGMA` (Default: `0`)
+*   `--downsample FACTOR` (Default: `1`)
+
+### Command Line Examples
+
+1.  **Basic conversion (likely needing HDU 1):**
+    ```bash
+    python fits_to_stl.py my_image.fits.fz my_model.stl --hdu 1
+    ```
+
+2.  **Recommended starting point for good tactile feel & printability:**
+    ```bash
+    python fits_to_stl.py nebula.fits nebula_tactile.stl --hdu 1 --log_scale --clip 1.0 --smooth 1.5 --max_height 12.0 --base_thickness 2.0
+    ```
+
+## Tips for Effective Models
+
+*(See the detailed tips in other sections of this README and within the script's help message: `python fits_to_stl.py --help`)*
+
+*   **For Tactile Feel:** Use `--log_scale`, `--smooth`, adjust `--max_height` and `--clip`. Simplify complex images with `--downsample`.
+*   **For 3D Printing:** Use `--smooth` (crucial!), `--base_thickness >= 2.0`, consider `--downsample`. In your slicer: **use a Brim**, **no supports** on the tactile surface, scale appropriately, use PLA.
+
+## Troubleshooting
+
+*(See the detailed troubleshooting steps in other sections of this README and within the script's help message)*
+
+*   Common issues include needing `--hdu 1`, adjusting `--smooth` for printability, using a brim for bed adhesion, and using `--downsample` for large files.
+
+## Contributing
+
+Contributions are welcome! Please use the GitHub Issue tracker for bugs and feature requests. For code contributions, please fork the repository and submit a Pull Request. See `CONTRIBUTING.md` for more details (if you create one).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+*   This tool relies heavily on [Astropy](https://www.astropy.org/), [NumPy](https://numpy.org/), [SciPy](https://scipy.org/), and [NumPy-STL](https://github.com/WoLpH/numpy-stl/).
+*   Inspired by efforts to make science accessible to everyone.
