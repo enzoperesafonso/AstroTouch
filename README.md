@@ -41,19 +41,15 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
 *   **Observation:** Taken by Roly Warry on Wed Jun 12 2024, using the 0.4-meter telescope at Siding Spring Observatory, Australia.
 *   **File:** (Let's assume a filename like `lco_helix_nebula_ha_0m4_sso_20240612.fits.fz`)
 
-1.  Input FITS Image (e.g., a galaxy)
-    ```
-    [Insert Screenshot of Original FITS Galaxy Image Here]
-    ```
-2.  Generate STL using recommended options:
+**2.  Generate STL using recommended options:**
     ```bash
      python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz output_model.stl --hdu 1 --log_scale --clip 1 --max_height 50 --smooth 2.0 --downsample 2
     ```
-3.  Preview STL in Slicer:
+**3.  Preview STL in Slicer:**
     ```
     [Insert Screenshot of STL Preview in Slicer Here]
     ```
-4.  3D Print the Model:
+**4.  3D Print the Model:**
     ```
     [Insert Photo of 3D Printed Galaxy Model Here]
     ```
