@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- Add other badges if you set up CI/CD, etc. -->
 
-![Example of NGC1300 from HST data](ngc1300.png)
+![Example of Helix Nebula](both.png)
 
 Convert astronomical FITS images into 3D printable STL surface relief models, designed primarily for astronomy outreach initiatives for the blind and visually impaired (BVI). This script allows users to transform the brightness variations in a 2D FITS image into height variations on a tangible 3D model.
 
@@ -148,3 +148,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 *   This tool relies heavily on [Astropy](https://www.astropy.org/), [NumPy](https://numpy.org/), [SciPy](https://scipy.org/), and [NumPy-STL](https://github.com/WoLpH/numpy-stl/).
 *   Inspired by efforts to make science accessible to everyone.
+
+![Example of NGC1300 from HST data](ngc1300.png)
