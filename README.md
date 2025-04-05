@@ -49,13 +49,11 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
    ```bash
    python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz output_model.stl --hdu 1 --log_scale --clip 1 --max_height 50 --smooth 2.0 --downsample 2
    ```
-    
-
-![Preview of the 3D model of the Helix nebula generated with AstroTouch](both.png)
 
 
 **4.  3D Print the Model:**
 
+![Preview of the 3D model of the Helix nebula generated with AstroTouch](both.png)
 
 ## Installation
 
