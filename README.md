@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- Add other badges if you set up CI/CD, etc. -->
 
-![View of the H-alpha emission from the Helix Nebula in FITS viewer](both.png)
+![Example of NGC1300 from HST data](ngc1300.png)
 
 Convert astronomical FITS images into 3D printable STL surface relief models, designed primarily for astronomy outreach initiatives for the blind and visually impaired (BVI). This script allows users to transform the brightness variations in a 2D FITS image into height variations on a tangible 3D model.
 
@@ -50,9 +50,8 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
    python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz output_model.stl --hdu 1 --log_scale --clip 1 --max_height 50 --smooth 2.0 --downsample 2
    ```
     
-**3.  Preview STL in Slicer:**
 
-![Preview of the 3D model of the Helix nebula generated with AstroTouch](output_model.jpg)
+![Preview of the 3D model of the Helix nebula generated with AstroTouch](both.png)
 
 
 **4.  3D Print the Model:**
