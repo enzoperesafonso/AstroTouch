@@ -3,7 +3,6 @@
 <!-- Add other badges if you set up CI/CD, etc. -->
 
 ![Example of M51 HST ACAS](m51.png)
-![Example of Helix Nebula](both.png)
 
 Convert astronomical FITS images into 3D printable STL surface relief models, designed primarily for astronomy outreach initiatives for the blind and visually impaired (BVI). This script allows users to transform the brightness variations in a 2D FITS image into height variations on a tangible 3D model.
 
