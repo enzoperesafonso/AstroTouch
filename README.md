@@ -153,7 +153,7 @@ In the spirit of open-source collaboration:
 You can connect in a couple of ways:
 
 *   **For technical questions or suggestions,** please [open an issue](https://github.com/enzoperesafonso/AstroTouch/issues) on this GitHub repository.
-*   **To share your creations** or see other astronomy outreach in action, follow and message our outreach group on Instagram: **[@zulelinye](https://www.instagram.com/zulelinye/)**.
+*   **To share your creations** or see other astronomy outreach in action, follow and message our outreach group (ask for enzo!) on Instagram: **[@zulelinye](https://www.instagram.com/zulelinye/)**.
 
 Let's make the universe a little more tangible for everyone, together.
 
