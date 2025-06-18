@@ -1,5 +1,10 @@
 # AstroTouch
+![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+
+
 
 ![Example of M51 HST ACAS](m51.png)
 
