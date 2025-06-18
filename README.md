@@ -164,6 +164,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgements
 
 *   This tool relies heavily on [Astropy](https://www.astropy.org/), [NumPy](https://numpy.org/), [SciPy](https://scipy.org/), and [NumPy-STL](https://github.com/WoLpH/numpy-stl/).
-*   Inspired by global efforts to make science accessible to everyone.
 
 ![Example of NGC1300 from HST data](ngc1300.png)
