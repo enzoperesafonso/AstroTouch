@@ -1,12 +1,3 @@
-Of course! It's crucial that the documentation reflects the new, more powerful features. The ability to set physical dimensions and add a border is a major upgrade.
-
-Here is a revised version of the README. I've focused on:
-
-Adding the new features to the Features list.
-Updating the Optional Arguments section with the new commands.
-Adding a new Command Line Example to showcase a complete "framed plaque" workflow.
-Slightly tweaking the help text to be clearer about what --longest_side controls.
-Revised README.md
 AstroTouch
 ![alt text](https://img.shields.io/badge/License-MIT-yellow.svg)
 
