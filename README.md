@@ -141,6 +141,22 @@ See `python fits_to_stl.py --help` for a full list and defaults. Key options inc
 *   **"The model lifts off the print bed":** Use a Brim in your slicer settings. A 5-8mm brim is usually sufficient.
 *   **"Processing is too slow" or "STL file is huge":** The image resolution is very high. Use `--downsample 2` or `--downsample 4` to make it more manageable.
 
+## Connect & Share
+
+AstroTouch was born from a passion for astronomy outreach and the belief that educational tools should be open and accessible to all. The goal is to help educators, astronomers, and enthusiasts share the wonders of the universe in a tangible way.
+
+In the spirit of open-source collaboration:
+
+*   **If you use this code for your own outreach projects, 3D prints, or educational materials, I would be thrilled to hear about it!** Seeing how these tools are used in the real world is the greatest reward.
+*   **If you have questions, ideas, or need a hand getting started, please don't hesitate to reach out.**
+
+You can connect in a couple of ways:
+
+*   **For technical questions or suggestions,** please [open an issue](https://github.com/enzoperesafonso/AstroTouch/issues) on this GitHub repository.
+*   **To share your creations** or see other astronomy outreach in action, follow and message our outreach group on Instagram: **[@zulelinye](https://www.instagram.com/zulelinye/)**.
+
+Let's make the universe a little more tangible for everyone, together.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
