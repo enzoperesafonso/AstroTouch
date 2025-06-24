@@ -33,6 +33,8 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 *   Handles `NaN`/`inf` values in FITS data by replacing them with a sensible default.
 *   Outputs standard STL files compatible with 3D printing slicers (like Cura, PrusaSlicer, etc.).
 
+![Example of Mult-Wavelength Observations Hercules A Galaxy](multiwavelength.png)
+
 ## Example Workflow: Helix Nebula
 
 Here's a workflow example using an observation of the Helix Nebula in Hydrogen-alpha.
@@ -170,8 +172,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 *   This tool relies heavily on [Astropy](https://www.astropy.org/), [NumPy](https://numpy.org/), [SciPy](https://scipy.org/), and [NumPy-STL](https://github.com/WoLpH/numpy-stl/).
 
-
-![Example of Mult-Wavelength Observations Hercules A Galaxy](multiwavelength.png)
 
 
 ![Example of NGC1300 from HST data](ngc1300.png)
