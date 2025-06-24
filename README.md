@@ -170,4 +170,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 *   This tool relies heavily on [Astropy](https://www.astropy.org/), [NumPy](https://numpy.org/), [SciPy](https://scipy.org/), and [NumPy-STL](https://github.com/WoLpH/numpy-stl/).
 
+
+![Example of Mult-Wavelength Observations Hercules A Galaxy](multiwavelength.png)
+
+
 ![Example of NGC1300 from HST data](ngc1300.png)
