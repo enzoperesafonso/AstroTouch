@@ -34,9 +34,7 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 *   Outputs standard STL files compatible with 3D printing slicers (like Cura, PrusaSlicer, etc.).
 
 ![A multiwavelength composite of the galaxy Centaurus A, combining data from X-ray, optical, and radio observations. The central image is a full-color composite revealing the galaxy's active core and massive jet structures. The purple glow represents X-ray emissions captured by the Chandra X-ray Observatory, the bright central region and surrounding stars are from optical data collected by the Hubble Space Telescope, and the large blue lobes represent radio emission mapped by the Very Large Array (VLA).
-
 To the right of the composite are three 3D-printed grayscale relief models, each corresponding to one wavelength:
-
 Top: X-Ray (CXRO), showing the hot plasma and energetic structures.
 Middle: Optical (HST), displaying stars and the galactic dust lane.
 Bottom: Radio (VLA), revealing the extended jets and radio lobes.](multiwavelength.png)
