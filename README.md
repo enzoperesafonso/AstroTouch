@@ -10,7 +10,7 @@
 
 Convert astronomical FITS images into 3D printable STL surface relief models, designed primarily for astronomy outreach initiatives for the blind and visually impaired (BVI). This script allows users to transform the brightness variations in a 2D FITS image into height variations on a tangible 3D model.
 
-** NEW! [Try the online GUI version here!]([https://github.com/enzoperesafonso/AstroTouch/issues](http://localhost:8503)) 
+** NEW! [Try the online GUI version here!](https://github.com/enzoperesafonso/AstroTouch/issues)
 
 ## Motivation
 
