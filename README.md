@@ -163,11 +163,6 @@ In the spirit of open-source collaboration:
 *   **If you use this code for your own outreach projects, 3D prints, or educational materials, I would be thrilled to hear about it!** Seeing how these tools are used in the real world is the greatest reward.
 *   **If you have questions, ideas, or need a hand getting started, please don't hesitate to reach out.**
 
-You can connect in a couple of ways:
-
-*   **For technical questions or suggestions,** please [open an issue](https://github.com/enzoperesafonso/AstroTouch/issues) on this GitHub repository.
-*   **To share your creations** or see other astronomy outreach in action, follow and message our outreach group (ask for enzo!) on Instagram: **[@zulelinye](https://www.instagram.com/zulelinye/)**.
-
 Let's make the universe a little more tangible for everyone, together.
 
 ## License
