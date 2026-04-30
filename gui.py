@@ -169,8 +169,8 @@ def main_page():
         with ui.column().classes('flex-grow h-full bg-slate-900 rounded-lg relative'):
             with ui.scene(width='100%', height='100%').classes('bg-slate-900') as scene:
                 gui.model_view = scene.group()
-                scene.camera.move(0, -10, 10)
-                scene.camera.look_at(0, 0, 0)
+                # Initial camera position
+                scene.move_camera(x=0, y=-10, z=10, duration=0)
             
             ui.label('3D Preview').classes('absolute top-4 left-4 text-white text-lg opacity-50 pointer-events-none')
 
