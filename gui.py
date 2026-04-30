@@ -26,6 +26,8 @@ class AstroTouchGUI:
         self.processing = False
         self.model_view = None
         self.scene = None
+        self.stats_label = None
+        self.loading_spinner = None
         
         # Parameters
         self.params = {
@@ -35,7 +37,7 @@ class AstroTouchGUI:
             'base_thickness': 2.0,
             'clip': 1.0,
             'smooth': 1.5,
-            'downsample': 1,
+            'downsample': 2, # Default to 2 for safety
             'scale_mode': 'log',
             'invert': False,
             'border_width': 0.0,
@@ -50,13 +52,17 @@ class AstroTouchGUI:
             f.write(content)
         ui.notify(f'Uploaded {e.file.name}')
         
-        # Try to auto-detect HDUs
+        # Try to auto-detect HDUs and check size
         try:
             with fits.open(self.fits_path) as hdul:
                 hdus = [i for i, h in enumerate(hdul) if h.data is not None and h.data.ndim == 2]
                 if hdus:
                     self.params['hdu'] = hdus[0]
-                    ui.notify(f'Found 2D data in HDU {hdus[0]}')
+                    shape = hdul[hdus[0]].data.shape
+                    ui.notify(f'Image size: {shape[1]}x{shape[0]}')
+                    if max(shape) > 1000 and self.params['downsample'] == 1:
+                        ui.notify('Large image detected. Setting downsample to 2 for performance.', type='warning')
+                        self.params['downsample'] = 2
         except:
             pass
 
@@ -66,21 +72,30 @@ class AstroTouchGUI:
             return
 
         self.processing = True
-        ui.notify('Processing... this may take a few seconds.')
+        if self.loading_spinner:
+            self.loading_spinner.set_visibility(True)
         
         try:
-            # Use io_bound (threading) instead of cpu_bound (multiprocessing) 
-            # to avoid pickling issues with the class instance.
-            self.stl_path = await run.io_bound(self._run_processing)
+            # Run the heavy lifting in a thread
+            result = await run.io_bound(self._run_processing)
+            self.stl_path = result['path']
+            
+            # Update stats
+            stats_text = f"Vertices: {result['vertices']:,} | Faces: {result['faces']:,}"
+            if self.stats_label:
+                self.stats_label.set_text(stats_text)
+            
             ui.notify('Success! Model generated.')
             self.update_preview()
         except Exception as e:
             ui.notify(f'Error: {str(e)}', type='negative')
         finally:
             self.processing = False
+            if self.loading_spinner:
+                self.loading_spinner.set_visibility(False)
 
     def _run_processing(self):
-        """The actual processing logic called via run.cpu_bound."""
+        """The actual processing logic."""
         data = load_fits_data(self.fits_path, self.params['hdu'])
         
         norm_data = preprocess_image(
@@ -104,28 +119,30 @@ class AstroTouchGUI:
         
         output_path = TEMP_DIR / f"{self.fits_path.stem}.stl"
         stl_mesh.save(str(output_path))
-        return output_path
+        
+        return {
+            'path': output_path,
+            'vertices': len(stl_mesh.vectors) * 3,
+            'faces': len(stl_mesh.vectors)
+        }
 
     def update_preview(self):
         if not self.stl_path or not self.model_view:
             return
             
-        # Use a URL to the static file instead of a giant Data URL
-        # We append a timestamp to bust the browser cache
         url = f'/temp/{self.stl_path.name}?t={os.path.getmtime(self.stl_path)}'
         
-        # Delete old group and recreate it
         self.model_view.delete()
         with self.scene:
             self.model_view = self.scene.group()
             with self.model_view:
-                # We scale by 0.1 for the preview viewport
-                ui.scene.stl(url).scale(0.1).move(z=-1)
-                ui.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
+                self.scene.stl(url).scale(0.1).move(z=-1)
+                self.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
 
     def download(self):
         if self.stl_path:
-            ui.download(self.stl_path)
+            # Direct static link is more robust for large files
+            ui.download(f'/temp/{self.stl_path.name}')
         else:
             ui.notify('No model generated yet', type='warning')
 
@@ -182,7 +199,16 @@ def main_page():
                 # Initial camera position
                 scene.move_camera(x=0, y=-10, z=10, duration=0)
             
-            ui.label('3D Preview').classes('absolute top-4 left-4 text-white text-lg opacity-50 pointer-events-none')
+            # Info overlay
+            with ui.column().classes('absolute top-4 left-4 text-white pointer-events-none'):
+                ui.label('3D Preview').classes('text-lg opacity-50')
+                gui.stats_label = ui.label('').classes('text-xs font-mono opacity-70')
+            
+            # Loading overlay
+            with ui.column().classes('absolute inset-0 flex items-center justify-center bg-black/50') as gui.loading_spinner:
+                ui.spinner(size='lg', color='primary')
+                ui.label('Processing 3D Mesh...').classes('text-white mt-4')
+            gui.loading_spinner.set_visibility(False)
 
 if __name__ in {"__main__", "__mp_main__"}:
     ui.run(title='AstroTouch GUI', port=8080)
