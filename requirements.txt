@@ -2,3 +2,5 @@ numpy
 astropy
 numpy-stl
 scipy
+tqdm
+nicegui

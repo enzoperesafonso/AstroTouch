@@ -20,20 +20,22 @@ Astronomical data is overwhelmingly visual. This project aims to bridge that gap
 
 *   Reads standard 2D FITS image data (`.fits`, `.fit`).
 *   Supports compressed FITS files (`.fits.fz`) automatically via `astropy`.
-*   Allows selection of the specific HDU containing the image data.
-*   **Control Physical Size (`--longest_side`):** Scale the model's *image content* to a specific physical dimension (e.g., 150mm), ensuring predictable print sizes.
-*   **Add a Raised Border/Frame (`--border_width_mm`, `--border_height`):** Automatically add a frame around the model with a specific width and height in millimeters. Perfect for creating a finished, tactile plaque.
+*   **Auto-HDU Detection:** Automatically finds the first HDU containing 2D image data if none is specified.
+*   **Control Physical Size (`--longest-side`):** Scale the model's *image content* to a specific physical dimension (e.g., 150mm), ensuring predictable print sizes.
+*   **Add a Raised Border/Frame (`--border-width`, `--border-height`):** Automatically add a frame around the model with a specific width and height in millimeters. Perfect for creating a finished, tactile plaque.
 *   Maps pixel brightness values to surface height (Z-axis).
 *   Options for data processing to enhance tactile feel and printability:
-    *   **Logarithmic Scaling (`--log_scale`):** Enhances faint features, crucial for most astronomical images.
+    *   **Logarithmic Scaling (`--log`):** Enhances faint features, crucial for most astronomical images.
+    *   **Arcsinh Scaling (`--asinh`):** A specialized astronomical scaling that preserves color and detail in high-dynamic-range images.
     *   **Clipping (`--clip`):** Removes extreme outlier pixel values (e.g., saturated stars) before scaling.
     *   **Smoothing (`--smooth`):** Applies Gaussian smoothing to reduce noise and sharp pixel edges for a better tactile feel and improved printability.
     *   **Inversion (`--invert`):** Maps bright pixels to low points (pits) instead of high points (peaks).
     *   **Downsampling (`--downsample`):** Reduces image resolution to simplify the model, speed up processing, and reduce file size.
 *   Adds a solid, flat base underneath the surface for print stability.
-*   Adjustable maximum feature height (`--max_height`) and base thickness (`--base_thickness`) in millimeters.
+*   Adjustable maximum feature height (`--max-height`) and base thickness (`--base-thickness`) in millimeters.
 *   Handles `NaN`/`inf` values in FITS data by replacing them with a sensible default.
 *   Outputs standard STL files compatible with 3D printing slicers (like Cura, PrusaSlicer, etc.).
+*   **High Performance:** Vectorized mesh generation for significantly faster processing of high-resolution images.
 
 ![A multiwavelength composite of the galaxy Centaurus A, combining data from X-ray, optical, and radio observations. The central image is a full-color composite revealing the galaxy's active core and massive jet structures. The purple glow represents X-ray emissions captured by the Chandra X-ray Observatory, the bright central region and surrounding stars are from optical data collected by the Hubble Space Telescope, and the large blue lobes represent radio emission mapped by the Very Large Array (VLA).
 To the right of the composite are three 3D-printed grayscale relief models, each corresponding to one wavelength:
@@ -59,7 +61,7 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
    This command will scale the nebula image to 120mm on its longest side, then add a 5mm wide, 2mm high border around it.
 
    ```bash
-   python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz helix_plaque.stl --hdu 1 --longest_side 120 --log_scale --clip 1 --smooth 2.0 --downsample 2 --border_width_mm 5 --border_height 2.0
+   python3 fits_to_stl.py coj0m421-sq37-20240612-0129-e91.fits.fz helix_plaque.stl --longest-side 120 --log --clip 1 --smooth 2.0 --downsample 2 --border-width 5 --border-height 2.0
    ```
 
 **3. 3D Print the Model:**
@@ -100,53 +102,55 @@ Here's a workflow example using an observation of the Helix Nebula in Hydrogen-a
 Run the script from your terminal (make sure your virtual environment is active):
 
 ```bash
-python fits_to_stl.py <input_fits_file> <output_stl_file> [options]
+python fits_to_stl.py <input_fits_file> [output_stl_file] [options]
 ```
 
 ### Required Arguments
 
 *   `<input_fits_file>`: Path to the input FITS file (e.g., `image.fits`).
-*   `<output_stl_file>`: Path where the output STL file will be saved (e.g., `model.stl`).
 
 ### Optional Arguments
 
+*   `[output_stl_file]`: Path where the output STL file will be saved. Defaults to `input_name.stl` if omitted.
+
 See `python fits_to_stl.py --help` for a full list and defaults. Key options include:
 
-*   `--hdu INDEX` (Default: `0`, often need `1` for processed telescope images)
-*   `--longest_side MM`: Scales the *image content* so its longest side matches this value in mm. The final model will be larger if a border is added.
-*   `--max_height MM` (Default: `10.0`): Maximum height of the features above the base.
-*   `--base_thickness MM` (Default: `2.0`)
-*   `--border_width_mm MM` (Default: `0.0`): Adds a border of this width around the model.
-*   `--border_height MM` (Default: `0.0`): Sets the height of the border, measured from the base.
+*   `--hdu INDEX`: Specific HDU to use. Defaults to automatic detection of the first 2D image.
+*   `--longest-side MM`: Scales the *image content* so its longest side matches this value in mm.
+*   `--max-height MM` (Default: `10.0`): Maximum height of the features above the base.
+*   `--base-thickness MM` (Default: `2.0`)
+*   `--border-width MM` (Default: `0.0`): Adds a border of this width around the model.
+*   `--border-height MM` (Default: `0.0`): Sets the height of the border, measured from the base.
 *   `--invert`: Inverts the height map.
-*   `--log_scale`: Applies log(1+x) scaling to enhance faint details.
+*   `--log`: Applies log(1+x) scaling to enhance faint details.
+*   `--asinh`: Applies arcsinh scaling (often better for preserving highlights).
 *   `--clip PERCENT` (Default: `1.0`): Clips the lowest and highest percentile of pixels.
-*   `--smooth SIGMA` (Default: `0`): Applies Gaussian smoothing. A value of `1.0` to `2.0` is recommended for tactile models.
+*   `--smooth SIGMA` (Default: `0`): Applies Gaussian smoothing (pixels).
 *   `--downsample FACTOR` (Default: `1`): Reduces image resolution by this factor.
 
 ### Command Line Examples
 
-1.  **Basic conversion (likely needing HDU 1):**
+1.  **Basic conversion (with auto-HDU detection):**
     ```bash
-    python fits_to_stl.py my_image.fits.fz my_model.stl --hdu 1
+    python fits_to_stl.py my_image.fits.fz
     ```
 
 2.  **Recommended starting point for a good tactile model:**
-    This command focuses on enhancing details and ensuring printability without setting a specific size.
+    This command focuses on enhancing details and ensuring printability.
     ```bash
-    python fits_to_stl.py nebula.fits nebula_tactile.stl --hdu 1 --log_scale --clip 1.0 --smooth 1.5 --max_height 12.0
+    python fits_to_stl.py nebula.fits nebula_tactile.stl --log --clip 1.0 --smooth 1.5 --max-height 12.0
     ```
 3.  **Creating a finished, framed plaque with a specific size:**
     This creates a model where the galaxy image is 150mm on its longest side, surrounded by a 10mm wide, 3mm high frame.
     ```bash
-    python fits_to_stl.py galaxy.fits galaxy_plaque.stl --hdu 1 --longest_side 150 --log_scale --clip 0.5 --smooth 2 --border_width_mm 10 --border_height 3
+    python fits_to_stl.py galaxy.fits galaxy_plaque.stl --longest-side 150 --log --clip 0.5 --smooth 2 --border-width 10 --border-height 3
     ```
 
 ## Tips for Effective Models
 
-*   **For Tactile Feel:** Use `--log_scale` to bring out faint structures. Use `--smooth` (`1.0` to `2.5`) to make surfaces less noisy and more pleasant to touch. Use `--clip` to prevent single bright stars from creating sharp, unpleasant spikes.
-*   **For Framing:** Use `--border_width_mm` and `--border_height` to create a finished look. A border height of `0` creates a flat flange, while a positive value creates a raised wall.
-*   **For 3D Printing:** Use `--smooth` (crucial for printability!). Ensure `--base_thickness` is at least `2.0` mm. In your slicer: **use a Brim** for bed adhesion, **do not use supports** on the tactile surface, and consider PLA filament.
+*   **For Tactile Feel:** Use `--log` or `--asinh` to bring out faint structures. Use `--smooth` (`1.0` to `2.5`) to make surfaces less noisy and more pleasant to touch. Use `--clip` to prevent single bright stars from creating sharp, unpleasant spikes.
+*   **For Framing:** Use `--border-width` and `--border-height` to create a finished look. A border height of `0` creates a flat flange, while a positive value creates a raised wall.
+*   **For 3D Printing:** Use `--smooth` (crucial for printability!). Ensure `--base-thickness` is at least `2.0` mm. In your slicer: **use a Brim** for bed adhesion, **do not use supports** on the tactile surface, and consider PLA filament.
 
 ## Troubleshooting
 *   **"My model is flat" or "Looks like noise":** You likely need to specify the correct HDU with `--hdu 1`. FITS files from telescopes often store the image in the second extension.
