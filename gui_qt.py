@@ -241,21 +241,28 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.plotter.clear()
         mesh = pv.read(str(self.stl_path))
         
-        # Center the mesh data itself at (0, 0, 0)
-        center = np.array(mesh.center)
-        mesh.translate(-center, inplace=True)
+        # Robust centering: manually shift all points to (0, 0, 0)
+        # We center X and Y, but keep the bottom of the base at Z=0
+        cx, cy, cz = mesh.center
+        bounds = mesh.bounds # [xmin, xmax, ymin, ymax, zmin, zmax]
+        
+        # Translation vector: center in X/Y, but set Z-min to 0
+        translation = [-cx, -cy, -bounds[4]]
+        mesh.points += translation
         
         # Add mesh with smooth shading
-        self.plotter.add_mesh(mesh, color="lightgray", show_edges=False, smooth_shading=True)
+        self.plotter.add_mesh(mesh, color="lightgray", show_edges=False, smooth_shading=True, name="model")
         
-        # Enable Eye Dome Lighting for depth
+        # Enable Eye Dome Lighting for depth perception
         self.plotter.enable_eye_dome_lighting()
         
-        # Force the camera to look at the origin and reset view
-        self.plotter.view_isometric()
-        self.plotter.camera.focal_point = (0, 0, 0)
+        # Visual aids: Floor grid and axes
+        self.plotter.add_floor_grid(color="gray", line_width=1)
+        self.plotter.add_axes()
+        
+        # Reset camera to look at the new center
+        self.plotter.camera.focal_point = (0, 0, (bounds[5]-bounds[4])/2)
         self.plotter.reset_camera()
-        self.plotter.add_axes() # Re-add axes after clear()
 
     def save_stl(self):
         if not self.stl_path:
