@@ -132,12 +132,23 @@ class AstroTouchGUI:
             
         url = f'/temp/{self.stl_path.name}?t={os.path.getmtime(self.stl_path)}'
         
+        # Calculate centering offsets
+        # We use the parameters from the GUI to estimate the size
+        width = self.params['longest_side']
+        # The model is scaled by 0.1 in the preview, so we shift by half the width * 0.1
+        offset = -(width * 0.1) / 2
+        
         self.model_view.delete()
         with self.scene:
             self.model_view = self.scene.group()
             with self.model_view:
-                self.scene.stl(url).scale(0.1).move(z=-1)
-                self.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
+                # Load STL and center it
+                self.scene.stl(url).scale(0.1).move(x=offset, y=offset, z=-1)
+            
+            # Move camera back to see the whole model (distance based on width)
+            cam_dist = max(width * 0.15, 15)
+            self.scene.move_camera(x=0, y=-cam_dist, z=cam_dist, duration=0.5)
+            self.scene.camera.look_at(0, 0, 0)
 
     def download(self):
         if self.stl_path:
@@ -196,8 +207,10 @@ def main_page():
             with ui.scene(width='100%', height='100%').classes('bg-slate-900') as scene:
                 gui.scene = scene
                 gui.model_view = scene.group()
-                # Initial camera position
-                scene.move_camera(x=0, y=-10, z=10, duration=0)
+                # Initial camera and lighting
+                scene.move_camera(x=0, y=-15, z=15, duration=0)
+                scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=20)
+                scene.ambient_light(intensity=0.2)
             
             # Info overlay
             with ui.column().classes('absolute top-4 left-4 text-white pointer-events-none'):
