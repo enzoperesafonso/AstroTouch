@@ -205,10 +205,10 @@ def main_page():
 
         # Main viewport
         with ui.column().classes('flex-grow h-full bg-slate-900 rounded-lg relative overflow-hidden') as viewport:
-            with ui.scene(width=800, height=600).classes('w-full h-full bg-slate-900') as scene:
+            # grid is a parameter of ui.scene, not a method
+            with ui.scene(width=800, height=600, grid=(20, 20)).classes('w-full h-full bg-slate-900') as scene:
                 gui.scene = scene
-                # Visual helpers
-                scene.grid(size=20, step=1)
+                # axes_helper is a method
                 scene.axes_helper(size=5)
                 
                 gui.model_view = scene.group()
