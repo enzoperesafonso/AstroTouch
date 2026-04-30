@@ -73,19 +73,19 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         central_widget = QtWidgets.QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QtWidgets.QHBoxLayout(central_widget)
+        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setSpacing(10)
 
         # Sidebar
-        sidebar = QtWidgets.QVBoxLayout()
         sidebar_widget = QtWidgets.QWidget()
         sidebar_widget.setFixedWidth(300)
-        sidebar_widget.setLayout(sidebar)
+        sidebar = QtWidgets.QVBoxLayout(sidebar_widget)
         main_layout.addWidget(sidebar_widget)
 
-        # 3D Viewport
+        # 3D Viewport - Added stretch factor 1 to ensure it takes all space
         self.plotter = QtInteractor(self)
-        main_layout.addWidget(self.plotter.interactor)
+        main_layout.addWidget(self.plotter.interactor, 1)
         self.plotter.set_background("black")
-        self.plotter.add_axes()
         self.plotter.enable_shadows()
 
         # UI Elements
@@ -241,14 +241,11 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.plotter.clear()
         mesh = pv.read(str(self.stl_path))
         
-        # Robust centering: manually shift all points to (0, 0, 0)
-        # We center X and Y, but keep the bottom of the base at Z=0
-        cx, cy, cz = mesh.center
-        bounds = mesh.bounds # [xmin, xmax, ymin, ymax, zmin, zmax]
-        
-        # Translation vector: center in X/Y, but set Z-min to 0
-        translation = [-cx, -cy, -bounds[4]]
-        mesh.points += translation
+        # Center the mesh data
+        # Translate so X/Y center is at 0 and Z-min is at 0
+        cx, cy, _ = mesh.center
+        zmin = mesh.bounds[4]
+        mesh.translate([-cx, -cy, -zmin], inplace=True)
         
         # Add mesh with smooth shading
         self.plotter.add_mesh(mesh, color="lightgray", show_edges=False, smooth_shading=True, name="model")
@@ -256,13 +253,13 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         # Enable Eye Dome Lighting for depth perception
         self.plotter.enable_eye_dome_lighting()
         
-        # Visual aids: Floor grid and axes
-        self.plotter.add_floor_grid(color="gray", line_width=1)
+        # Visual aids
+        self.plotter.show_grid(color="gray", fmt="%.0f mm")
         self.plotter.add_axes()
         
-        # Reset camera to look at the new center
-        self.plotter.camera.focal_point = (0, 0, (bounds[5]-bounds[4])/2)
+        # Reset camera to fit the model perfectly in center
         self.plotter.reset_camera()
+        self.plotter.render()
 
     def save_stl(self):
         if not self.stl_path:
