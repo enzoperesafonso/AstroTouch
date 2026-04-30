@@ -145,10 +145,11 @@ class AstroTouchGUI:
                 # Load STL and center it
                 self.scene.stl(url).scale(0.1).move(x=offset, y=offset, z=-1)
             
-            # Move camera back to see the whole model (distance based on width)
+            # Move camera back to see the whole model
             cam_dist = max(width * 0.15, 15)
-            self.scene.move_camera(x=0, y=-cam_dist, z=cam_dist, duration=0.5)
-            self.scene.camera.look_at(0, 0, 0)
+            self.scene.move_camera(x=0, y=-cam_dist, z=cam_dist, 
+                                 look_at_x=0, look_at_y=0, look_at_z=0, 
+                                 duration=0.5)
 
     def download(self):
         if self.stl_path:
