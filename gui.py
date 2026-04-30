@@ -16,6 +16,9 @@ from fits_to_stl import load_fits_data, preprocess_image, generate_mesh
 TEMP_DIR = Path(tempfile.gettempdir()) / 'astrotouch'
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
+# Serve the temp directory for STL preview
+app.add_static_files('/temp', str(TEMP_DIR))
+
 class AstroTouchGUI:
     def __init__(self):
         self.fits_path = None
@@ -107,20 +110,17 @@ class AstroTouchGUI:
         if not self.stl_path or not self.model_view:
             return
             
-        # Convert STL to data URL for Three.js
-        with open(self.stl_path, 'rb') as f:
-            content = f.read()
-            base64_data = base64.b64encode(content).decode('utf-8')
-            data_url = f'data:application/sla;base64,{base64_data}'
+        # Use a URL to the static file instead of a giant Data URL
+        # We append a timestamp to bust the browser cache
+        url = f'/temp/{self.stl_path.name}?t={os.path.getmtime(self.stl_path)}'
         
         # Delete old group and recreate it
         self.model_view.delete()
         with self.scene:
             self.model_view = self.scene.group()
             with self.model_view:
-                # Scale and center logic
                 # We scale by 0.1 for the preview viewport
-                ui.scene.stl(data_url).scale(0.1).move(z=-1)
+                ui.scene.stl(url).scale(0.1).move(z=-1)
                 ui.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
 
     def download(self):
@@ -161,6 +161,9 @@ def main_page():
             
             ui.slider(min=0, max=10, step=0.5).bind_value(gui.params, 'smooth')
             ui.label().bind_text_from(gui.params, 'smooth', backward=lambda x: f'Smoothing (sigma): {x}')
+            
+            ui.number('Downsample Factor', min=1, max=10, step=1).bind_value(gui.params, 'downsample').classes('w-full')
+            ui.label('Increasing this greatly speeds up large images.').classes('text-xs text-slate-500')
             
             ui.select({'log': 'Logarithmic', 'asinh': 'Arcsinh', 'linear': 'Linear'}, label='Scaling').bind_value(gui.params, 'scale_mode').classes('w-full')
             ui.checkbox('Invert Heights').bind_value(gui.params, 'invert')
