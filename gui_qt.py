@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import os
-import threading
 from pathlib import Path
 import tempfile
 
@@ -63,36 +62,32 @@ class Worker(QtCore.QThread):
 class AstroTouchWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("AstroTouch Desktop - 3D Astronomy")
+        self.setWindowTitle("AstroTouch Desktop")
         self.resize(1200, 800)
 
         self.fits_path = None
         self.stl_path = None
 
         # Main Layout
-        central_widget = QtWidgets.QWidget()
-        self.setCentralWidget(central_widget)
-        main_layout = QtWidgets.QHBoxLayout(central_widget)
-        main_layout.setContentsMargins(10, 10, 10, 10)
-        main_layout.setSpacing(10)
+        self.central_widget = QtWidgets.QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.main_layout = QtWidgets.QHBoxLayout(self.central_widget)
 
         # Sidebar
-        sidebar_widget = QtWidgets.QWidget()
-        sidebar_widget.setFixedWidth(300)
-        sidebar = QtWidgets.QVBoxLayout(sidebar_widget)
-        main_layout.addWidget(sidebar_widget)
+        self.sidebar_widget = QtWidgets.QWidget()
+        self.sidebar_widget.setFixedWidth(300)
+        self.sidebar = QtWidgets.QVBoxLayout(self.sidebar_widget)
+        self.main_layout.addWidget(self.sidebar_widget)
 
-        # 3D Viewport - Added stretch factor 1 to ensure it takes all space
-        self.plotter = QtInteractor(self)
-        main_layout.addWidget(self.plotter.interactor, 1)
+        # 3D Viewport
+        self.plotter = QtInteractor(self.central_widget)
+        self.main_layout.addWidget(self.plotter.interactor, 1)
         self.plotter.set_background("black")
-        self.plotter.enable_shadows()
-
-        # UI Elements
-        self.setup_sidebar(sidebar)
+        self.plotter.enable_eye_dome_lighting()
+        
+        self.setup_sidebar(self.sidebar)
 
     def setup_sidebar(self, layout):
-        # File Section
         layout.addWidget(QtWidgets.QLabel("<b>Input FITS</b>"))
         btn_open = QtWidgets.QPushButton("Open FITS File")
         btn_open.clicked.connect(self.open_file)
@@ -101,31 +96,23 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.lbl_file.setWordWrap(True)
         layout.addWidget(self.lbl_file)
 
-        layout.addSpacing(20)
-
-        # Parameters
+        layout.addSpacing(10)
         layout.addWidget(QtWidgets.QLabel("<b>Dimensions</b>"))
         self.spn_hdu = self.create_spinbox("HDU Index:", 0, 10, 0)
         layout.addLayout(self.spn_hdu[0])
-        
         self.spn_size = self.create_spinbox("Longest Side (mm):", 1, 500, 100)
         layout.addLayout(self.spn_size[0])
-        
         self.spn_height = self.create_double_spinbox("Max Height (mm):", 0.1, 50.0, 10.0)
         layout.addLayout(self.spn_height[0])
-        
         self.spn_base = self.create_double_spinbox("Base Thickness (mm):", 0.1, 10.0, 2.0)
         layout.addLayout(self.spn_base[0])
 
-        layout.addSpacing(20)
-
+        layout.addSpacing(10)
         layout.addWidget(QtWidgets.QLabel("<b>Processing</b>"))
         self.spn_clip = self.create_double_spinbox("Clipping (%):", 0, 10.0, 1.0)
         layout.addLayout(self.spn_clip[0])
-        
         self.spn_smooth = self.create_double_spinbox("Smoothing (sigma):", 0, 10.0, 1.5)
         layout.addLayout(self.spn_smooth[0])
-        
         self.spn_downsample = self.create_spinbox("Downsample Factor:", 1, 10, 2)
         layout.addLayout(self.spn_downsample[0])
 
@@ -133,13 +120,10 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.cmb_scale.addItems(["log", "asinh", "linear"])
         layout.addWidget(QtWidgets.QLabel("Scaling Mode:"))
         layout.addWidget(self.cmb_scale)
-
         self.chk_invert = QtWidgets.QCheckBox("Invert Heights")
         layout.addWidget(self.chk_invert)
 
-        layout.addSpacing(20)
-
-        # Border
+        layout.addSpacing(10)
         layout.addWidget(QtWidgets.QLabel("<b>Border</b>"))
         self.spn_border_w = self.create_double_spinbox("Width (mm):", 0, 20.0, 0.0)
         layout.addLayout(self.spn_border_w[0])
@@ -148,7 +132,10 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
 
         layout.addStretch()
 
-        # Action Buttons
+        btn_recenter = QtWidgets.QPushButton("RECENTER VIEW")
+        btn_recenter.clicked.connect(self.recenter_view)
+        layout.addWidget(btn_recenter)
+
         self.btn_process = QtWidgets.QPushButton("PROCESS 3D MODEL")
         self.btn_process.setFixedHeight(50)
         self.btn_process.setStyleSheet("background-color: #3872a3; color: white; font-weight: bold;")
@@ -164,7 +151,6 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.btn_save.setEnabled(False)
         layout.addWidget(self.btn_save)
 
-        # Status Bar
         self.status = QtWidgets.QLabel("Ready")
         layout.addWidget(self.status)
 
@@ -172,8 +158,7 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         lyt = QtWidgets.QHBoxLayout()
         lyt.addWidget(QtWidgets.QLabel(label))
         sb = QtWidgets.QSpinBox()
-        sb.setRange(min_v, max_v)
-        sb.setValue(default)
+        sb.setRange(min_v, max_v); sb.setValue(default)
         lyt.addWidget(sb)
         return lyt, sb
 
@@ -181,95 +166,63 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         lyt = QtWidgets.QHBoxLayout()
         lyt.addWidget(QtWidgets.QLabel(label))
         sb = QtWidgets.QDoubleSpinBox()
-        sb.setRange(min_v, max_v)
-        sb.setSingleStep(0.1)
-        sb.setValue(default)
+        sb.setRange(min_v, max_v); sb.setSingleStep(0.1); sb.setValue(default)
         lyt.addWidget(sb)
         return lyt, sb
 
     def open_file(self):
-        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open FITS File", "", "FITS Files (*.fits *.fit *.fz)")
+        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open FITS", "", "FITS (*.fits *.fit *.fz)")
         if file_path:
             self.fits_path = file_path
             self.lbl_file.setText(os.path.basename(file_path))
-            self.status.setText(f"Loaded {os.path.basename(file_path)}")
 
     def start_processing(self):
-        if not self.fits_path:
-            QtWidgets.QMessageBox.warning(self, "Error", "Please select a FITS file first.")
-            return
-
+        if not self.fits_path: return
         params = {
-            'fits_path': self.fits_path,
-            'hdu': self.spn_hdu[1].value(),
-            'longest_side': self.spn_size[1].value(),
-            'max_height': self.spn_height[1].value(),
-            'base_thickness': self.spn_base[1].value(),
-            'clip': self.spn_clip[1].value(),
-            'smooth': self.spn_smooth[1].value(),
-            'downsample': self.spn_downsample[1].value(),
-            'scale_mode': self.cmb_scale.currentText(),
-            'invert': self.chk_invert.isChecked(),
-            'border_width': self.spn_border_w[1].value(),
-            'border_height': self.spn_border_h[1].value()
+            'fits_path': self.fits_path, 'hdu': self.spn_hdu[1].value(),
+            'longest_side': self.spn_size[1].value(), 'max_height': self.spn_height[1].value(),
+            'base_thickness': self.spn_base[1].value(), 'clip': self.spn_clip[1].value(),
+            'smooth': self.spn_smooth[1].value(), 'downsample': self.spn_downsample[1].value(),
+            'scale_mode': self.cmb_scale.currentText(), 'invert': self.chk_invert.isChecked(),
+            'border_width': self.spn_border_w[1].value(), 'border_height': self.spn_border_h[1].value()
         }
-
-        self.btn_process.setEnabled(False)
-        self.progress_bar.setVisible(True)
-        self.progress_bar.setRange(0, 0) # Indeterminate
-        
+        self.btn_process.setEnabled(False); self.progress_bar.setVisible(True)
+        self.progress_bar.setRange(0, 0)
         self.worker = Worker(params)
-        self.worker.progress.connect(self.status.setText)
-        self.worker.error.connect(self.handle_error)
         self.worker.finished.connect(self.update_view)
+        self.worker.error.connect(self.handle_error)
         self.worker.start()
 
     def handle_error(self, message):
         QtWidgets.QMessageBox.critical(self, "Error", message)
-        self.btn_process.setEnabled(True)
-        self.progress_bar.setVisible(False)
-        self.status.setText("Error occurred")
+        self.btn_process.setEnabled(True); self.progress_bar.setVisible(False)
+
+    def recenter_view(self):
+        self.plotter.view_isometric()
+        self.plotter.reset_camera()
 
     def update_view(self, result):
         self.stl_path = result['path']
-        self.btn_process.setEnabled(True)
-        self.btn_save.setEnabled(True)
+        self.btn_process.setEnabled(True); self.btn_save.setEnabled(True)
         self.progress_bar.setVisible(False)
         self.status.setText(f"Done! Faces: {result['faces']:,}")
-
-        # Load into PyVista
+        
         self.plotter.clear()
         mesh = pv.read(str(self.stl_path))
         
-        # Center the mesh data
-        # Translate so X/Y center is at 0 and Z-min is at 0
-        cx, cy, _ = mesh.center
-        zmin = mesh.bounds[4]
-        mesh.translate([-cx, -cy, -zmin], inplace=True)
+        # BRUTE FORCE ORIGIN CENTERING
+        # Move the mesh points so the bounding box center is at 0,0,0
+        mesh.points -= np.array(mesh.center)
         
-        # Add mesh with smooth shading
-        self.plotter.add_mesh(mesh, color="lightgray", show_edges=False, smooth_shading=True, name="model")
-        
-        # Enable Eye Dome Lighting for depth perception
-        self.plotter.enable_eye_dome_lighting()
-        
-        # Visual aids
-        self.plotter.show_grid(color="gray", fmt="%.0f mm")
+        self.plotter.add_mesh(mesh, color="lightgray", smooth_shading=True)
         self.plotter.add_axes()
-        
-        # Reset camera to fit the model perfectly in center
-        self.plotter.reset_camera()
-        self.plotter.render()
+        self.recenter_view()
 
     def save_stl(self):
-        if not self.stl_path:
-            return
-        
-        save_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save STL", "", "STL Files (*.stl)")
+        if not self.stl_path: return
+        save_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save STL", "", "STL (*.stl)")
         if save_path:
-            import shutil
-            shutil.copy(self.stl_path, save_path)
-            QtWidgets.QMessageBox.information(self, "Success", f"File saved to {save_path}")
+            import shutil; shutil.copy(self.stl_path, save_path)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
