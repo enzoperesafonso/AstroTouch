@@ -22,6 +22,7 @@ class AstroTouchGUI:
         self.stl_path = None
         self.processing = False
         self.model_view = None
+        self.scene = None
         
         # Parameters
         self.params = {
@@ -112,12 +113,15 @@ class AstroTouchGUI:
             base64_data = base64.b64encode(content).decode('utf-8')
             data_url = f'data:application/sla;base64,{base64_data}'
         
-        self.model_view.clear()
-        with self.model_view:
-            # Scale and center logic
-            # We scale by 0.1 for the preview viewport
-            ui.scene.stl(data_url).scale(0.1).move(z=-1)
-            ui.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
+        # Delete old group and recreate it
+        self.model_view.delete()
+        with self.scene:
+            self.model_view = self.scene.group()
+            with self.model_view:
+                # Scale and center logic
+                # We scale by 0.1 for the preview viewport
+                ui.scene.stl(data_url).scale(0.1).move(z=-1)
+                ui.scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=10)
 
     def download(self):
         if self.stl_path:
@@ -170,6 +174,7 @@ def main_page():
         # Main viewport
         with ui.column().classes('flex-grow h-full bg-slate-900 rounded-lg relative'):
             with ui.scene(width='100%', height='100%').classes('bg-slate-900') as scene:
+                gui.scene = scene
                 gui.model_view = scene.group()
                 # Initial camera position
                 scene.move_camera(x=0, y=-10, z=10, duration=0)
