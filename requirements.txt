@@ -3,4 +3,7 @@ astropy
 numpy-stl
 scipy
 tqdm
-nicegui
+PySide6
+pyvista[all]
+pyvistaqt
+qtpy
