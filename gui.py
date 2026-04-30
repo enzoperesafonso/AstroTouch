@@ -204,15 +204,17 @@ def main_page():
             ui.number('Border Height (mm)', step=0.1).bind_value(gui.params, 'border_height').classes('w-full')
 
         # Main viewport
-        with ui.column().classes('flex-grow h-full bg-slate-900 rounded-lg relative'):
-            with ui.scene(width='100%', height='100%').classes('bg-slate-900') as scene:
+        with ui.column().classes('flex-grow h-full bg-slate-900 rounded-lg relative overflow-hidden') as viewport:
+            with ui.scene(width=800, height=600).classes('w-full h-full bg-slate-900') as scene:
                 gui.scene = scene
+                # Visual helpers
+                scene.grid(size=20, step=1)
+                scene.axes_helper(size=5)
+                
                 gui.model_view = scene.group()
                 # Initial camera and lighting
                 scene.move_camera(x=0, y=-15, z=15, duration=0)
                 scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=20)
-                # Note: ambient_light is not available in NiceGUI, 
-                # using a second spot light to brighten shadows if needed
                 scene.spot_light(distance=100, intensity=0.3).move(x=10, y=10, z=10)
             
             # Info overlay
