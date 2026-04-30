@@ -84,8 +84,9 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.plotter_layout = QtWidgets.QVBoxLayout(self.plotter_widget)
         self.plotter_layout.setContentsMargins(0, 0, 0, 0)
         
+        # Add the plotter itself (which is the QWidget) to the layout
         self.plotter = QtInteractor(self.plotter_widget)
-        self.plotter_layout.addWidget(self.plotter.interactor)
+        self.plotter_layout.addWidget(self.plotter)
         self.plotter.set_background("black")
         self.plotter.enable_eye_dome_lighting()
         
