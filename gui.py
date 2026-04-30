@@ -210,7 +210,9 @@ def main_page():
                 # Initial camera and lighting
                 scene.move_camera(x=0, y=-15, z=15, duration=0)
                 scene.spot_light(distance=100, intensity=0.8).move(y=-10, z=20)
-                scene.ambient_light(intensity=0.2)
+                # Note: ambient_light is not available in NiceGUI, 
+                # using a second spot light to brighten shadows if needed
+                scene.spot_light(distance=100, intensity=0.3).move(x=10, y=10, z=10)
             
             # Info overlay
             with ui.column().classes('absolute top-4 left-4 text-white pointer-events-none'):
