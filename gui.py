@@ -65,8 +65,9 @@ class AstroTouchGUI:
         ui.notify('Processing... this may take a few seconds.')
         
         try:
-            # Run the heavy lifting in a thread to keep UI responsive
-            self.stl_path = await run.cpu_bound(self._run_processing)
+            # Use io_bound (threading) instead of cpu_bound (multiprocessing) 
+            # to avoid pickling issues with the class instance.
+            self.stl_path = await run.io_bound(self._run_processing)
             ui.notify('Success! Model generated.')
             self.update_preview()
         except Exception as e:
