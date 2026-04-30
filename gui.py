@@ -41,8 +41,9 @@ class AstroTouchGUI:
     async def handle_upload(self, e):
         """Save uploaded FITS to a temporary file."""
         self.fits_path = TEMP_DIR / e.file.name
+        content = await e.file.read()
         with open(self.fits_path, 'wb') as f:
-            f.write(e.file.read())
+            f.write(content)
         ui.notify(f'Uploaded {e.file.name}')
         
         # Try to auto-detect HDUs
