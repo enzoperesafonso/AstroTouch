@@ -63,31 +63,41 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("AstroTouch Desktop")
-        self.resize(1200, 800)
+        self.resize(1280, 800)
 
         self.fits_path = None
         self.stl_path = None
 
-        # Main Layout
-        self.central_widget = QtWidgets.QWidget()
-        self.setCentralWidget(self.central_widget)
-        self.main_layout = QtWidgets.QHBoxLayout(self.central_widget)
+        # --- Layout using QSplitter for proper expansion ---
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        self.setCentralWidget(splitter)
 
-        # Sidebar
-        self.sidebar_widget = QtWidgets.QWidget()
-        self.sidebar_widget.setFixedWidth(300)
-        self.sidebar = QtWidgets.QVBoxLayout(self.sidebar_widget)
-        self.main_layout.addWidget(self.sidebar_widget)
+        # Sidebar Container
+        sidebar_widget = QtWidgets.QWidget()
+        sidebar_widget.setMinimumWidth(300)
+        sidebar_widget.setMaximumWidth(400)
+        self.sidebar_layout = QtWidgets.QVBoxLayout(sidebar_widget)
+        splitter.addWidget(sidebar_widget)
 
-        # 3D Viewport
-        self.plotter = QtInteractor(self.central_widget)
-        self.main_layout.addWidget(self.plotter.interactor, 1)
+        # 3D Viewport Container
+        self.plotter_widget = QtWidgets.QWidget()
+        self.plotter_layout = QtWidgets.QVBoxLayout(self.plotter_widget)
+        self.plotter_layout.setContentsMargins(0, 0, 0, 0)
+        
+        self.plotter = QtInteractor(self.plotter_widget)
+        self.plotter_layout.addWidget(self.plotter.interactor)
         self.plotter.set_background("black")
         self.plotter.enable_eye_dome_lighting()
         
-        self.setup_sidebar(self.sidebar)
+        splitter.addWidget(self.plotter_widget)
+        
+        # Ensure the 3D window gets the stretch
+        splitter.setStretchFactor(1, 1)
+
+        self.setup_sidebar(self.sidebar_layout)
 
     def setup_sidebar(self, layout):
+        # File
         layout.addWidget(QtWidgets.QLabel("<b>Input FITS</b>"))
         btn_open = QtWidgets.QPushButton("Open FITS File")
         btn_open.clicked.connect(self.open_file)
@@ -97,6 +107,8 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         layout.addWidget(self.lbl_file)
 
         layout.addSpacing(10)
+        
+        # Dimensions
         layout.addWidget(QtWidgets.QLabel("<b>Dimensions</b>"))
         self.spn_hdu = self.create_spinbox("HDU Index:", 0, 10, 0)
         layout.addLayout(self.spn_hdu[0])
@@ -108,6 +120,8 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         layout.addLayout(self.spn_base[0])
 
         layout.addSpacing(10)
+        
+        # Processing
         layout.addWidget(QtWidgets.QLabel("<b>Processing</b>"))
         self.spn_clip = self.create_double_spinbox("Clipping (%):", 0, 10.0, 1.0)
         layout.addLayout(self.spn_clip[0])
@@ -124,6 +138,8 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         layout.addWidget(self.chk_invert)
 
         layout.addSpacing(10)
+        
+        # Border
         layout.addWidget(QtWidgets.QLabel("<b>Border</b>"))
         self.spn_border_w = self.create_double_spinbox("Width (mm):", 0, 20.0, 0.0)
         layout.addLayout(self.spn_border_w[0])
@@ -132,7 +148,8 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
 
         layout.addStretch()
 
-        btn_recenter = QtWidgets.QPushButton("RECENTER VIEW")
+        # Final Actions
+        btn_recenter = QtWidgets.QPushButton("CENTER CAMERA")
         btn_recenter.clicked.connect(self.recenter_view)
         layout.addWidget(btn_recenter)
 
@@ -198,8 +215,10 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.btn_process.setEnabled(True); self.progress_bar.setVisible(False)
 
     def recenter_view(self):
-        self.plotter.view_isometric()
+        """Forces the camera to look directly at the center from above."""
+        self.plotter.view_xy() # Top down
         self.plotter.reset_camera()
+        self.plotter.render()
 
     def update_view(self, result):
         self.stl_path = result['path']
@@ -210,12 +229,15 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.plotter.clear()
         mesh = pv.read(str(self.stl_path))
         
-        # BRUTE FORCE ORIGIN CENTERING
-        # Move the mesh points so the bounding box center is at 0,0,0
-        mesh.points -= np.array(mesh.center)
+        # MANUALLY SHIFT MESH DATA TO ORIGIN (Absolute Center)
+        mesh.translate(-np.array(mesh.center), inplace=True)
         
-        self.plotter.add_mesh(mesh, color="lightgray", smooth_shading=True)
-        self.plotter.add_axes()
+        # Add mesh to scene - Smooth shading and light gray
+        self.plotter.add_mesh(mesh, color="lightgray", smooth_shading=True, name="model")
+        
+        # No axis helper as requested
+        
+        # Reset camera
         self.recenter_view()
 
     def save_stl(self):
