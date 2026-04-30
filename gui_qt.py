@@ -241,18 +241,21 @@ class AstroTouchWindow(QtWidgets.QMainWindow):
         self.plotter.clear()
         mesh = pv.read(str(self.stl_path))
         
-        # Center the mesh at (0, 0, 0)
+        # Center the mesh data itself at (0, 0, 0)
         center = np.array(mesh.center)
         mesh.translate(-center, inplace=True)
         
         # Add mesh with smooth shading
         self.plotter.add_mesh(mesh, color="lightgray", show_edges=False, smooth_shading=True)
         
-        # Enable Eye Dome Lighting - This is the "magic" for surface relief
-        # It adds silhouettes and shading that makes depth pop!
+        # Enable Eye Dome Lighting for depth
         self.plotter.enable_eye_dome_lighting()
         
+        # Force the camera to look at the origin and reset view
+        self.plotter.view_isometric()
+        self.plotter.camera.focal_point = (0, 0, 0)
         self.plotter.reset_camera()
+        self.plotter.add_axes() # Re-add axes after clear()
 
     def save_stl(self):
         if not self.stl_path:
