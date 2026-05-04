@@ -2,3 +2,8 @@ numpy
 astropy
 numpy-stl
 scipy
+tqdm
+PySide6
+pyvista[all]
+pyvistaqt
+qtpy
