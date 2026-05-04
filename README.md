@@ -138,4 +138,4 @@ Astronomical data is overwhelmingly visual. This project aims to bridge the gap 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Original by **Enzo Peres Afonso** (2025). Refactored and enhanced for improved accessibility.
+By **Enzo Peres Afonso** (2025).
