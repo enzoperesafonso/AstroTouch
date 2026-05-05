@@ -57,44 +57,69 @@ def generate_braille_mesh(text, dot_radius=0.75, dot_height=0.8, dot_spacing=2.5
         (dot_spacing, 2*dot_spacing), (dot_spacing, dot_spacing), (dot_spacing, 0) # Dots 4, 5, 6
     ]
     
-    current_x = 0
-    for char in text:
-        # 1. Capitalization Indicator
-        if char.isupper():
-            pattern = BRAILLE_PATTERNS['^']
-            for i, bit in enumerate(pattern):
-                if bit:
-                    dx, dy = dot_offsets[i]
-                    dot = pv.Sphere(radius=dot_radius, center=(current_x + dx, dy, 0))
-                    dot.scale([1, 1, dot_height/dot_radius], inplace=True)
-                    dot = dot.clip(normal='-z', origin=(0, 0, 0))
-                    meshes.append(dot)
-            current_x += cell_spacing
-            char = char.lower()
+    def add_cell(pattern, x_pos):
+        for i, bit in enumerate(pattern):
+            if bit:
+                dx, dy = dot_offsets[i]
+                dot = pv.Sphere(radius=dot_radius, center=(x_pos + dx, dy, 0))
+                dot.scale([1, 1, dot_height/dot_radius], inplace=True)
+                dot = dot.clip(normal='-z', origin=(0, 0, 0)).fill_holes(1000)
+                meshes.append(dot)
 
-        # 2. Number Indicator
+    current_x = 0
+    in_number_sequence = False
+    
+    i = 0
+    while i < len(text):
+        char = text[i]
+        
+        # 1. Number Indicator
         if char.isdigit():
-            pattern = BRAILLE_PATTERNS['#']
-            for i, bit in enumerate(pattern):
-                if bit:
-                    dx, dy = dot_offsets[i]
-                    dot = pv.Sphere(radius=dot_radius, center=(current_x + dx, dy, 0))
-                    dot.scale([1, 1, dot_height/dot_radius], inplace=True)
-                    dot = dot.clip(normal='-z', origin=(0, 0, 0))
-                    meshes.append(dot)
-            current_x += cell_spacing
+            if not in_number_sequence:
+                add_cell(BRAILLE_PATTERNS['#'], current_x)
+                current_x += cell_spacing
+                in_number_sequence = True
+        else:
+            in_number_sequence = False
+
+        # 2. Capitalization Indicator
+        if char.isupper():
+            # Check for sequence of capitals (all-caps word)
+            caps_count = 0
+            j = i
+            while j < len(text) and text[j].isupper():
+                caps_count += 1
+                j += 1
+            
+            if caps_count > 1:
+                # Double capital sign for all-caps word
+                add_cell(BRAILLE_PATTERNS['^'], current_x)
+                current_x += cell_spacing
+                add_cell(BRAILLE_PATTERNS['^'], current_x)
+                current_x += cell_spacing
+                # Add all capitalized characters
+                for k in range(caps_count):
+                    c = text[i+k].lower()
+                    if c in BRAILLE_PATTERNS:
+                        add_cell(BRAILLE_PATTERNS[c], current_x)
+                        current_x += cell_spacing
+                i += caps_count
+                continue
+            else:
+                # Single capital sign
+                add_cell(BRAILLE_PATTERNS['^'], current_x)
+                current_x += cell_spacing
+                char = char.lower()
 
         # 3. Main Character
         if char in BRAILLE_PATTERNS:
-            pattern = BRAILLE_PATTERNS[char]
-            for i, bit in enumerate(pattern):
-                if bit:
-                    dx, dy = dot_offsets[i]
-                    dot = pv.Sphere(radius=dot_radius, center=(current_x + dx, dy, 0))
-                    dot.scale([1, 1, dot_height/dot_radius], inplace=True)
-                    dot = dot.clip(normal='-z', origin=(0, 0, 0))
-                    meshes.append(dot)
-        current_x += cell_spacing
+            add_cell(BRAILLE_PATTERNS[char], current_x)
+            current_x += cell_spacing
+        elif char.lower() in BRAILLE_PATTERNS:
+            add_cell(BRAILLE_PATTERNS[char.lower()], current_x)
+            current_x += cell_spacing
+        
+        i += 1
         
     if not meshes:
         return None
