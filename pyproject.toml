@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astrotouch"
+dynamic = ["version"]
+description = "Turn astronomical images into 3D-printable tactile models with braille labels, for blind and visually impaired outreach."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Enzo Peres Afonso" }]
+requires-python = ">=3.10"
+keywords = ["astronomy", "accessibility", "tactile", "3d-printing", "braille", "fits", "outreach"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "astropy",
+    "numpy-stl",
+    "pyvista",
+    "Pillow",
+]
+
+[project.optional-dependencies]
+gui = ["PySide6", "pyvistaqt"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+astrotouch = "astrotouch.core:main"
+
+[project.gui-scripts]
+astrotouch-gui = "astrotouch.gui:main"
+
+[project.urls]
+Homepage = "https://github.com/enzoperesafonso/AstroTouch"
+Issues = "https://github.com/enzoperesafonso/AstroTouch/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "astrotouch.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# Real errors only (syntax errors, undefined names, unused imports and variables).
+select = ["E9", "F"]

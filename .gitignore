@@ -173,3 +173,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# macOS
+.DS_Store
+
+# Models and outputs made while developing (keep them out of the repo)
+/*.stl
+/*.astrotouch.json

@@ -1,0 +1,33 @@
+name: Feedback from using the models
+description: Tried the printed models with blind or low-vision people, or read the braille? Tell us what worked.
+labels: [accessibility, feedback]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        This is the most valuable feedback the project can get. Short notes are welcome, and you don't need to
+        know anything about the code.
+  - type: input
+    id: model
+    attributes:
+      label: Which model?
+      placeholder: "e.g. Centaurus A radio plaque, 110 mm, braille label"
+  - type: textarea
+    id: worked
+    attributes:
+      label: What could people feel and understand?
+  - type: textarea
+    id: hard
+    attributes:
+      label: What was hard to feel, confusing, or misleading?
+      description: e.g. features too low or too close together, bumps mistaken for braille, unclear labels.
+  - type: textarea
+    id: braille
+    attributes:
+      label: Braille
+      description: Was the braille readable and correct? Dot height, spacing, wording, contractions.
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Who tried it (no names needed), the setting (classroom, outreach event...), and printer and material if known.

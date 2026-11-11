@@ -1,0 +1,26 @@
+name: Share a model or suggest an object
+description: Made a model you're proud of, or know an object and dataset that would make a great one?
+labels: [models]
+body:
+  - type: input
+    id: object
+    attributes:
+      label: Object
+      placeholder: "e.g. the Crab Nebula"
+    validations:
+      required: true
+  - type: textarea
+    id: story
+    attributes:
+      label: Why it would make a good tactile model
+      description: What should people feel, and what is the story behind it?
+  - type: textarea
+    id: data
+    attributes:
+      label: Data and licence
+      description: Where the image or data is from, and its licence or credit line (e.g. CC BY-NC for MeerKAT data).
+  - type: textarea
+    id: settings
+    attributes:
+      label: Your settings and pictures
+      description: If you made it, attach the `.astrotouch.json` saved from the GUI and photos or renders of the print.

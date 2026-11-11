@@ -1,0 +1,20 @@
+name: Feature request
+description: An idea to make AstroTouch or its models better.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The problem or the kind of model you want to make, not just the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+  - type: textarea
+    id: touch
+    attributes:
+      label: How will it feel?
+      description: For changes to the models, what should a finger find? Tactile-graphics guidance or user testing is welcome.

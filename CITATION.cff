@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use AstroTouch in your work, please cite it as below."
+title: "AstroTouch: tactile 3D-printable models from astronomical images"
+abstract: >
+  AstroTouch turns astronomical images (FITS files and pictures) into 3D-printable tactile relief models with
+  braille labels, for astronomy outreach with blind and visually impaired people.
+type: software
+authors:
+  - family-names: "Peres Afonso"
+    given-names: "Enzo"
+version: "0.2.0"
+license: MIT
+repository-code: "https://github.com/enzoperesafonso/AstroTouch"
+keywords:
+  - astronomy
+  - accessibility
+  - tactile graphics
+  - 3D printing
+  - braille
