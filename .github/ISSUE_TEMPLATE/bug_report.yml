@@ -1,0 +1,37 @@
+name: Bug report
+description: Something doesn't work, crashes, or makes a wrong model.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: >
+        The command you ran, or the GUI steps. If you saved the model from the GUI, please attach its
+        `.astrotouch.json` (the settings), which makes most problems reproducible.
+      placeholder: "astrotouch image.fits out.stl --recipe radio --plaque large ..."
+  - type: textarea
+    id: data
+    attributes:
+      label: The image
+      description: >
+        What kind of image (radio map, optical survey, press picture...), its size, and where it is from.
+        Link it if it is public; please don't attach data you're not allowed to share.
+  - type: textarea
+    id: log
+    attributes:
+      label: Output or error message
+      description: Run the command line with `--verbose` for the full log.
+      render: text
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Operating system, Python version, and AstroTouch version (`python -c "import astrotouch; print(astrotouch.__version__)"`).

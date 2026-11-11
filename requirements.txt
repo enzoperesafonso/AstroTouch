@@ -1,9 +1,10 @@
+# Everything needed to run AstroTouch from a clone, including the GUI.
+# Or install it as a package: pip install -e ".[gui]"  (add ",dev" for the tests)
 numpy
+scipy
 astropy
 numpy-stl
-scipy
-tqdm
+pyvista
+Pillow
 PySide6
-pyvista[all]
 pyvistaqt
-qtpy
