@@ -22,34 +22,13 @@
 
 ## What it makes
 
-Each set below shows the real image beside the plaques made from it. All were built with AstroTouch, and are designed to be explored by touch.
+![Las Cumbres Observatory image of the Helix Nebula beside its tactile plaque](assets/readme/set_helix.jpg)
 
-<table>
-  <tr>
-    <td width="50%"><img src="assets/readme/set_galaxy_morphology.jpg" alt="Galaxy morphology set: eight Hubble classes from elliptical to irregular, as photographs and as tactile plaques"></td>
-    <td width="50%"><img src="assets/readme/set_mgp.jpg" alt="MeerKAT radio image of the Galactic Centre with its landmarks labelled, beside two tactile plaques of it"></td>
-  </tr>
-  <tr>
-    <td><b>Galaxy morphology:</b> the eight Hubble classes, from a smooth elliptical dome to knotty spiral arms.</td>
-    <td><b>MeerKAT Galactic Centre:</b> the radio image of the Milky Way's heart, with the black hole as the summit.</td>
-  </tr>
-  <tr>
-    <td><img src="assets/readme/set_multiwavelength_cenA.jpg" alt="Centaurus A in radio, infrared, visible and ultraviolet light, each with its tactile plaque"></td>
-    <td><img src="assets/readme/set_hercules.jpg" alt="Hercules A in radio, visible and X-ray light, each with its tactile plaque"></td>
-  </tr>
-  <tr>
-    <td><b>Centaurus A in four kinds of light:</b> the same patch of sky in radio, infrared, visible and ultraviolet.</td>
-    <td><b>Hercules A:</b> radio jets far larger than the galaxy you can see, and the hot gas around it.</td>
-  </tr>
-  <tr>
-    <td><img src="assets/readme/set_helix.jpg" alt="Las Cumbres Observatory image of the Helix Nebula beside its tactile plaque"></td>
-    <td><img src="assets/readme/set_wr140.jpg" alt="JWST image of the dust shells of Wolf-Rayet 140 beside its tactile plaque, the shells as parallel ridges"></td>
-  </tr>
-  <tr>
-    <td><b>Helix Nebula:</b> a ring of glowing gas around a dying star, with a marker for the star.</td>
-    <td><b>Wolf-Rayet 140:</b> nested dust shells from JWST, one ridge per eight-year orbit.</td>
-  </tr>
-</table>
+**Helix Nebula:** the source image and the plaque made from it.
+
+![Centaurus A in radio, infrared, visible and ultraviolet light, each with its tactile plaque](assets/readme/set_multiwavelength_cenA.jpg)
+
+**Centaurus A:** the same galaxy in radio, infrared, visible and ultraviolet light.
 
 <sub>Image credits are listed under [Credits](#credits).</sub>
 
@@ -402,13 +381,9 @@ If you use AstroTouch in your work, please cite it: GitHub's **Cite this reposit
 
 ## Credits
 
-Images of the model sets above:
-*   **Galaxy morphology:** DESI Legacy Imaging Surveys (DR9, DR10); stars from ESA Gaia DR3; classes from the Revised Shapley-Ames Catalog.
-*   **MeerKAT Galactic Centre:** Heywood et al. (2022), ApJ 925, 165. The MeerKAT telescope is operated by the South African Radio Astronomy Observatory, a facility of the National Research Foundation, an agency of the Department of Science and Innovation. Licence CC BY-NC 4.0.
+Images above:
 *   **Centaurus A:** SUMSS (University of Sydney), WISE (NASA/JPL-Caltech/UCLA), DSS2 (STScI/AURA), GALEX (NASA), via NASA SkyView.
-*   **Hercules A:** radio R. Perley and W. Cotton (NRAO/AUI/NSF, VLA); visible NASA, ESA, S. Baum and C. O'Dea (RIT) and the Hubble Heritage Team (STScI/AURA); X-ray NASA/CXC/SAO.
 *   **Helix Nebula:** Las Cumbres Observatory (0.4 m telescope, Siding Spring); stars from ESA Gaia DR3.
-*   **Wolf-Rayet 140:** NASA, ESA, CSA, STScI, JPL-Caltech (JWST MIRI); Lau et al. (2022), Nature Astronomy 6, 1308.
 *   **GUI screenshot:** M74 from the DESI Legacy Imaging Surveys.
 
 ---
